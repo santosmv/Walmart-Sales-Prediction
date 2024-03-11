@@ -28,27 +28,6 @@ def create_table_predictors():
 
     metadata.create_all(engine)
 
-def create_table_X_data():
-    engine = create_engine("sqlite+pysqlite:///data/database.db")
-    metadata = MetaData()
-
-    table_X = Table('X_data', metadata,
-            Column('id', Integer),
-            Column('set_id', Integer),
-            Column('target_id', Integer),
-            Column('train_test', String),
-            Column('1', Float),
-            Column('2', Float),
-            Column('3', Float),
-            Column('4', Float),
-            Column('5', Float),
-            Column('6', Float),
-            Column('7', Float),
-            Column('8', Float)
-            )
-
-    metadata.create_all(engine)
-
 def create_table_target_prediction():
     engine = create_engine("sqlite+pysqlite:///data/database.db")
     metadata = MetaData()
@@ -57,7 +36,6 @@ def create_table_target_prediction():
                   Column('id', Integer),
                   Column('set_id', Integer),
                   Column('pred_id', Integer), #only for predictions
-                  Column('X_id', Integer),
                   Column('predictor', String), #only for predictions
                   Column('timeline', Date),
                   Column('train_test_prediction', String),
@@ -73,7 +51,6 @@ def create_table_settings_data():
     table_settings = Table('settings_data', metadata,
                     Column('id', Integer, primary_key=True),
                     Column('target_id', Integer),
-                    Column('X_id', Integer),
                     Column('date_time', DateTime),
                     Column('store', Integer),
                     Column('test_fraction', Float),
@@ -95,7 +72,7 @@ def drop_all_tables():
     if len(tables) == 0:
         print('All tables were successfully dropped!')
     else:
-        print('Error when dropping tables: %i tables remaining!'%len(tables))
+        print('Error when dropping tables: %i tables remaining! Run it again!'%len(tables))
         exit()
 
 if __name__ == '__main__':
@@ -104,8 +81,8 @@ if __name__ == '__main__':
 
     if check_file:
         asw = False
-        # while asw != 'y' and asw != 'n':
-        #     asw = input("Are you sure? All tables and data will be deleted. (y/n): ")
+        while asw != 'y' and asw != 'n':
+            asw = input("Are you sure? All tables and data will be deleted. (y/n): ")
 
         if asw == 'n':
             print('Exit...')
@@ -115,7 +92,6 @@ if __name__ == '__main__':
     
     print('Creating new tables...')
     create_table_predictors()
-    create_table_X_data()
     create_table_target_prediction()
     create_table_settings_data()
     print('Tables were successfully created!')
